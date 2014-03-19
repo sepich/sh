@@ -1,0 +1,2 @@
+#!/bin/bash
+[ -f /usr/bin/svn ] && /usr/bin/svn export --force https://github.com/sepich/sh/trunk ~ || echo "svn not installed"
