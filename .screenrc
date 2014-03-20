@@ -5,7 +5,7 @@ bindkey -k F2 next
 #bindkey -k k; kill
 
 #enable mouse in mc
-termcapinfo linux|xterm|rxvt|xterm-color ti@:te@:XT
+#termcapinfo linux|xterm|rxvt|xterm-color ti@:te@:XT
 
 vbell off
 startup_message off
