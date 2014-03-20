@@ -8,4 +8,4 @@ caption string "%-w%{= gk}%n %t%{-}%+w |%h %=Load: %l [%c]"
 #defc1 off
 defutf8 on
 altscreen on
-defnonblock5
+defnonblock 5
