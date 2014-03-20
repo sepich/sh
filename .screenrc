@@ -4,7 +4,7 @@ bindkey -k F2 next
 #F10 to close window
 #bindkey -k k; kill
 
-#enable mouse in mc
+#get scroll buffer dirty
 #termcapinfo linux|xterm|rxvt|xterm-color ti@:te@:XT
 
 vbell off
@@ -16,4 +16,4 @@ caption string "%-w%{= gk}%n %t%{-}%+w |%h %=Load: %l [%c]"
 defutf8 on
 altscreen on
 defnonblock 5
-#defmousetrack on
+defmousetrack on
