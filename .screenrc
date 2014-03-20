@@ -5,5 +5,7 @@ nonblock on
 defscrollback 5000
 caption always
 caption string "%-w%{= gk}%n %t%{-}%+w |%h %=Load: %l [%c]"
-defc1 off
+#defc1 off
 defutf8 on
+altscreen on
+defnonblock5
