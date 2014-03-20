@@ -1,11 +1,19 @@
+#Hotkeys F11-F12 for prev-next
 bindkey -k F1 prev
 bindkey -k F2 next
+#F10 to close window
+#bindkey -k k; kill
+
+#enable mouse in mc
+termcapinfo linux|xterm|rxvt|xterm-color ti@:te@:XT
+
+vbell off
 startup_message off
 nonblock on
 defscrollback 5000
 caption always
 caption string "%-w%{= gk}%n %t%{-}%+w |%h %=Load: %l [%c]"
-#defc1 off
 defutf8 on
 altscreen on
 defnonblock 5
+#defmousetrack on
