@@ -20,6 +20,12 @@ fi
 export GREP_OPTIONS='--color=auto'
 man() { env LESS_TERMCAP_md=$(printf "\e[1;32m") LESS_TERMCAP_me=$(printf "\e[0m") man "$@"; }
 
+#.nanorc
+if [ ! -f ~/.nanorc ]; then
+  echo -e "set matchbrackets \"(<[{)>]}\"\nset tabsize 2\nset tabstospaces" > ~/.nanorc
+  for I in `ls /usr/share/nano/*.nanorc`; do echo "include $I">>~/.nanorc; done
+fi
+
 #Hooks
 if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then . /etc/bash_completion; fi
