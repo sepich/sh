@@ -1,6 +1,7 @@
 #!/bin/bash
+# mysql-grants -u user -p > users.sql
 
-mysql -B -N $@ -e "SELECT DISTINCT CONCAT(
+q=`mysql -B -N $@ -e "SELECT DISTINCT CONCAT(
   'SHOW GRANTS FOR \'', user, '\'@\'', host, '\';'
-) AS query FROM mysql.user" | mysql $@ | sed 's/^Grants/\n## Grants/'
-
+  ) AS query FROM mysql.user"`
+echo $q | mysql $@ | sed 's/\(GRANT .*\)/\1;/;s/^\(Grants for .*\)/## \1 ##/;/##/{x;p;x;}'
