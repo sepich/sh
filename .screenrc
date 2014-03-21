@@ -11,8 +11,9 @@ vbell off
 startup_message off
 nonblock on
 defscrollback 5000
-caption always
-caption string "%-w%{= gk}%n %t%{-}%+w |%h %=Load: %l [%c]"
+backtick 1 3600 3600 hostname -f
+caption always "%-w%{= gk}%n %t%{-}%+w | %=%1` %l [%c]"
+#caption string "%-w%{= gk}%n %t%{-}%+w | %=%1` %l [%c]"
 defutf8 on
 altscreen on
 defnonblock 5
