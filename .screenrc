@@ -16,4 +16,4 @@ caption always "%-w%{= gk}%n %t%{-}%+w | %=%1` %l [%c]"
 defutf8 on
 altscreen on
 defnonblock 5
-defmousetrack on
+#defmousetrack on
