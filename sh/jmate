@@ -1,4 +1,4 @@
 #!/bin/sh
 export RMATE_PORT=52698
 export RMATE_HOST=10.254.250.27
-rmate $1
+rmate -m "`hostname -s` $1" "$1"
