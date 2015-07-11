@@ -1,4 +1,4 @@
-#Non interctive shell
+#Non interactive shell
 [ -z "$PS1" ] && return
 
 #History
