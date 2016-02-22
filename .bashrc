@@ -35,3 +35,8 @@ LANG="en_US.UTF-8"
 export LANG
 LC_ALL="en_US.UTF-8"
 export LC_ALL
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/sh" ] ; then
+    PATH="$HOME/sh:$PATH"
+fi
