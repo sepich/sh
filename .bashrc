@@ -7,7 +7,7 @@ shopt -s histappend
 HISTCONTROL=ignoredups
 HISTSIZE=1000
 HISTFILESIZE=10000
-PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+PROMPT_COMMAND="history -a; history -n; echo -ne "\033]0;${HOSTNAME}\007"" #sync history between sessions, update window title (also available ${USER},${PWD})
 
 #Prompt
 if type __git_ps1 >/dev/null 2>&1; then
