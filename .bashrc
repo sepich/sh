@@ -7,14 +7,7 @@ shopt -s histappend
 HISTCONTROL=ignoredups
 HISTSIZE=1000
 HISTFILESIZE=10000
-PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
-
-#Prompt
-if type __git_ps1 >/dev/null 2>&1; then
-  PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\[\033[33;1m\]$(__git_ps1 "(%s)")\[\033[00m\]\$ '
-else
-  PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\[\033[00m\]\$ '
-fi
+PROMPT_COMMAND='history -a'
 
 #Colorizing
 export GREP_OPTIONS='--color=auto'
@@ -35,6 +28,14 @@ LANG="en_US.UTF-8"
 export LANG
 LC_ALL="en_US.UTF-8"
 export LC_ALL
+
+#Prompt
+if type __git_ps1 >/dev/null 2>&1; then
+  PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\[\033[33;1m\]$(__git_ps1 "(%s)")\[\033[00m\]\$ '
+else
+  PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\[\033[00m\]\$ '
+fi
+PS1="\033];\h\007$PS1" #update window title
 
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/sh" ] ; then
