@@ -1,5 +1,6 @@
 #Non interactive shell
 [ -z "$PS1" ] && return
+[ -z "$BASH_VERSION" ] && return
 
 #History
 shopt -s checkjobs
@@ -7,13 +8,12 @@ shopt -s histappend
 HISTCONTROL=ignoredups
 HISTSIZE=1000
 HISTFILESIZE=10000
+HISTIGNORE='exit:cd:ls:bg:fg:history'
+PROMPT_DIRTRIM=5  # truncate long paths to ".../foo/bar/baz"
 PROMPT_COMMAND='history -a'
 
 #Colorizing
-export GREP_OPTIONS='--color=auto'
 man() { env LESS_TERMCAP_md=$(printf "\e[1;32m") LESS_TERMCAP_me=$(printf "\e[0m") man "$@"; }
-
-#.nanorc
 if [ ! -f ~/.nanorc ]; then
   echo -e "set matchbrackets \"(<[{)>]}\"\nset tabsize 2\nset tabstospaces" > ~/.nanorc
   for I in `ls /usr/share/nano/*.nanorc`; do echo "include $I">>~/.nanorc; done
@@ -24,10 +24,8 @@ if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then . /etc/bash_completion; fi
 
 #UTF8
-LANG="en_US.UTF-8"
-export LANG
-LC_ALL="en_US.UTF-8"
-export LC_ALL
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
 
 #Prompt
 if type __git_ps1 >/dev/null 2>&1; then
@@ -38,6 +36,5 @@ fi
 PS1="\033];\h\007$PS1" #update window title
 
 # set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/sh" ] ; then
-    PATH="$HOME/sh:$PATH"
-fi
+[ -d "$HOME/sh" ] && PATH="$HOME/sh:$PATH"
+[ -f ~/.bashrc.local ] && source ~/.bashrc.local

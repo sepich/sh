@@ -3,5 +3,3 @@
 	name = sepa
 [colour]
 	ui = true
-[push]
-	default = simple
