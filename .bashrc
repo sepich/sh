@@ -33,7 +33,7 @@ if type __git_ps1 >/dev/null 2>&1; then
 else
   PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;36m\]\w\[\033[00m\]\$ '
 fi
-PS1="\033];\h\007$PS1" #update window title
+PS1="\[\033];\h\007\]$PS1" #update window title
 
 # set PATH so it includes user's private bin if it exists
 [ -d "$HOME/sh" ] && PATH="$HOME/sh:$PATH"
