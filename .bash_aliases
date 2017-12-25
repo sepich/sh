@@ -6,3 +6,4 @@ alias grep='grep --color=auto'
 alias less='`find /usr/share/vim -name less.sh || less`'
 #mouse support in screen
 alias mc='mc -x'
+alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
