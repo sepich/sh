@@ -1,3 +1,4 @@
+# git clone --bare https://github.com/sepich/sh.git $HOME/.cfg && alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME' && config config --local status.showUntrackedFiles no && config reset --hard
 alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias sudobash='sudo env HOME=$HOME SSH_AUTH_SOCK=$SSH_AUTH_SOCK bash -l'
 alias ls='ls --color=auto --group-directories-first'
@@ -24,10 +25,10 @@ function dps {
     s/->/→/g;
     s/ [a-z0-9\._-]\+\/\([a-z0-9\._-]\+\/\)\?\([a-z0-9\._-]\+\:[a-z0-9\._-]\+\) /®\/\2/g;
     s/0\.0\.0\.0:/:/g;
-    s/(healthy)/H/g;
+    s/(healthy)/\*/g;
     s/^\([a-z0-9_-]\+\.\([0-9]\+\.\)\?\)\(...\)[a-z0-9\.]\+/\1\3 …/g;
     s/  \+/;/g
-  ' | column -s\; -t | sed "1s/.*/\x1B[1m&\x1B[m/"
+  ' | column -s\; -t | sed "1s/.*/\x1B[1m&\x1B[m/" | sed "s/\(\*\)/\x1B[32m\1\x1B[m/g"
 }
 function dexec {
   docker exec -itu root `docker ps -qf name=$@ | head -1` /bin/bash
