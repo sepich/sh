@@ -28,7 +28,7 @@ function dps {
     s/(healthy)/\*/g;
     s/^\([a-z0-9_-]\+\.\([0-9]\+\.\)\?\)\(...\)[a-z0-9\.]\+/\1\3 …/g;
     s/  \+/;/g
-  ' | column -s\; -t | sed "1s/.*/\x1B[1m&\x1B[m/" | sed "s/\(\*\)/\x1B[32m\1\x1B[m/g"
+  ' | column -s\; -t | sed "1s/.*/\x1B[1m&\x1B[m/" | sort | sed "s/\(\*\)/\x1B[32m\1\x1B[m/g"
 }
 function dexec {
   docker exec -itu root `docker ps -qf name=$@ | head -1` /bin/bash
