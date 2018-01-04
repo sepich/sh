@@ -35,6 +35,4 @@ else
 fi
 PS1="\[\033];\h\007\]$PS1" #update window title
 
-# set PATH so it includes user's private bin if it exists
-[ -d "$HOME/sh" ] && PATH="$HOME/sh:$PATH"
 [ -f ~/.bashrc.local ] && source ~/.bashrc.local
