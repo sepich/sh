@@ -31,5 +31,5 @@ function dps {
   ' | column -s\; -t | sed "1s/.*/\x1B[1m&\x1B[m/" | sort | sed "s/\(\*\)/\x1B[32m\1\x1B[m/g"
 }
 function dexec {
-  docker exec -itu root `docker ps -qf name=$@ | head -1` /bin/bash
+  docker exec -itu root -e COLUMNS=`tput cols` `docker ps -qf name=$@ | head -1` /bin/bash
 }
