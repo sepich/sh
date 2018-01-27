@@ -11,20 +11,21 @@ sock="/tmp/docker-${host}.sock"
 [ -e "${sock}" ] && rm "$sock"
 ssh -nNT -L ${sock}:/var/run/docker.sock $host &
 pid=$!
-while [ ! -S "${sock}" ] && kill -0 $pid; do sleep 0.2; echo -n '.'; done
+while [ ! -S "${sock}" ] && kill -0 $pid &>/dev/null; do sleep 0.2; echo -n '.'; done
 echo .
+[ ! -S "${sock}" ] && exit 1
 
 export DOCKER_HOST="unix:///${sock}"
 if [ "$cmd" ]; then
     $cmd
 else
-    COLOR='\[\033[0;33m\]'
-    NC='\[\033[00m\]'
-    RED='\[\033[1;31m\]'
+    COLOR='\033[0;33m'
+    NC='\033[00m'
+    RED='\033[1;31m'
     short=`echo $host | cut -d. -f1`
     echo -e "Local docker client connected to ${COLOR}${host}${NC} docker daemon."
     echo -e "Press ${RED}Ctrl+D${NC} to stop forwarding and exit the bash session."
-    bash --rcfile <(cat ~/.bashrc; echo "PS1=\"${COLOR}${short}>${NC} \"")
+    bash --rcfile <(cat ~/.bashrc; echo "PS1=\"\[${COLOR}\]${short}>\[${NC}\] \"")
 fi
 kill -15 $pid
 [ -e "${sock}" ] && rm "$sock"
