@@ -36,4 +36,5 @@ else
 fi
 PS1="\[\033];\h\007\]$PS1" #update window title
 
+[ -d "$HOME/.local//bin" ] && PATH="$HOME/.local/bin:$PATH"  # pip --user
 [ -f ~/.bashrc.local ] && source ~/.bashrc.local
