@@ -6,6 +6,7 @@ alias dir='dir --color=auto'
 alias vdir='vdir --color=auto'
 alias grep='grep --color=auto'
 alias less='`find /usr/share/vim -name less.sh || less`'
+alias k='kubectl'
 # mouse support in screen
 alias mc='mc -x'
 
@@ -31,5 +32,7 @@ function dps {
   ' | column -s\; -t | sed "1s/.*/\x1B[1m&\x1B[m/" | sort | sed "s/\(\*\)/\x1B[32m\1\x1B[m/g"
 }
 function dexec {
-  docker exec -itu root -e COLUMNS=`tput cols` -e LINES=`tput lines` `docker ps -qf name=$@ | head -1` /bin/bash
+  local args="-e COLUMNS=`tput cols` -e LINES=`tput lines`"
+  [ "$http_proxy" ] && args="$args -e http_proxy=$http_proxy -e https_proxy=$https_proxy -e no_proxy=$no_proxy"
+  docker exec -itu root $args `docker ps -qf name=$@ | head -1` /bin/bash
 }
