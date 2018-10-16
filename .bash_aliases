@@ -36,3 +36,9 @@ function dexec {
   [ "$http_proxy" ] && args="$args -e http_proxy=$http_proxy -e https_proxy=$https_proxy -e no_proxy=$no_proxy"
   docker exec -itu root $args `docker ps -qf name=$@ | head -1` /bin/bash
 }
+function kexec {
+  local pod=`kubectl get po -o custom-columns=name:metadata.name | grep "$1" | head -1` c
+  [ "$2" ] && c="-c $2"
+  kubectl exec -it $pod $c env COLUMNS=`tput cols` LINES=`tput lines` bash
+  local args="-e COLUMNS=`tput cols` -e LINES=`tput lines`"
+}
