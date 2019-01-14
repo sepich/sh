@@ -6,6 +6,7 @@ map q :qa<CR>
 set t_Co=256
 set background=dark
 set ruler
+set expandtab
 filetype indent on
 
 "scroll by cursor in less

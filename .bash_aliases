@@ -37,7 +37,7 @@ function dexec {
   docker exec -itu root $args `docker ps -qf name=$@ | head -1` /bin/bash
 }
 function kexec {
-  local pod=`kubectl get po -o custom-columns=name:metadata.name | grep "$1" | head -1` c
+  local pod=`kubectl get po -o custom-columns=:metadata.name | grep "$1" | head -1` c
   [ "$2" ] && c="-c $2"
   kubectl exec -it $pod $c env COLUMNS=`tput cols` LINES=`tput lines` bash
   local args="-e COLUMNS=`tput cols` -e LINES=`tput lines`"
