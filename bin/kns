@@ -1,0 +1,35 @@
+#!/bin/bash
+PS1_CACHE='/tmp/.kns'
+
+main() {
+    case $1 in
+        setup) setup;;
+        off)   off;;
+        *)     kns "$@";;
+    esac
+}
+
+setup() {
+    echo ln -s ${0}.completion /etc/bash_completion.d/kns
+}
+
+kns() {
+    local cluster=$1
+    if [ "$1" == "-n" ]; then
+        cluster=`kubectl config view | sed -nr 's/.*server: https:\/\/([^\.]+)\..*/\1/p'`
+    else
+        [ -f ~/.kube/$1 ] || { echo "No such file: ~/.kube/$1!"; exit 1; }
+        cp ~/.kube/{$1,config}
+    fi
+    if [ "$2" ]; then
+        ctx=`kubectl config current-context`
+        kubectl config set-context "${ctx}" --namespace="${2}"
+    fi
+    echo -n "$cluster:$2"$'\u2388 ' > $PS1_CACHE
+}
+
+off() {
+    [ -f $PS1_CACHE ] && rm $PS1_CACHE
+}
+
+main "$@"
