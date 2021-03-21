@@ -20,9 +20,8 @@ if [ ! -f ~/.nanorc ]; then
 fi
 
 #Hooks
-if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then . /etc/bash_completion; fi
-complete -F _known_hosts rdocker
+if [ -f ~/.bash_aliases ]; then . ~/.bash_aliases; fi
 
 #UTF8
 export LANG="en_US.UTF-8"

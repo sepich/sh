@@ -2,15 +2,13 @@
 alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias sudobash='sudo env HOME=$HOME SSH_AUTH_SOCK=$SSH_AUTH_SOCK bash -l'
 alias ls='ls --color=auto --group-directories-first'
-alias dir='dir --color=auto'
-alias vdir='vdir --color=auto'
 alias grep='grep --color=auto'
 alias less='`find /usr/share/vim -name less.sh || less`'
-alias k='kubectl'
 # mouse support in screen
-alias mc='mc -x'
+#alias mc='mc -x'
 
 # docker
+complete -F _known_hosts rdocker
 alias dclean='docker ps -aqf status=exited | xargs -r docker rm'
 function dps {
   docker ps --format "table {{.Names}}\\t{{.Status}}\\t{{.Image}}\\t{{.Ports}}" $@ |
@@ -36,9 +34,53 @@ function dexec {
   [ "$http_proxy" ] && args="$args -e http_proxy=$http_proxy -e https_proxy=$https_proxy -e no_proxy=$no_proxy"
   docker exec -itu root $args `docker ps -qf name=$@ | head -1` /bin/bash
 }
+
+# k8s
+complete -o default -F __start_kubectl kubectl k kw ks
+alias k='kubectl'
+alias kw="watch -d kubectl"
+alias ks="EDITOR='code -w' KUBE_EDITOR=~/bin/kube-secret-editor.py kubectl"
 function kexec {
   local pod=`kubectl get po -o custom-columns=:metadata.name | grep "$1" | head -1` c
   [ "$2" ] && c="-c $2"
   kubectl exec -it $pod $c env COLUMNS=`tput cols` LINES=`tput lines` bash
-  local args="-e COLUMNS=`tput cols` -e LINES=`tput lines`"
+}
+function kgrep {
+  kubectl get po -o wide -A | grep "$@" | column -t
+}
+# https://github.com/kubermatic/fubectl
+alias _inline_fzf="fzf --multi --ansi -i -1 --height=50% --reverse -0 --header-lines=1 --inline-info"
+alias _inline_fzf_nh="fzf --multi --ansi -i -1 --height=50% --reverse -0 --inline-info"
+# choose container to see logs
+klog() {
+  local line_count=10
+  if [[ $1 =~ ^[-]{0,1}[0-9]+$ ]]; then
+    line_count="$1"
+    shift
+  fi
+
+  local arg_pair=$(kubectl get po --all-namespaces | _inline_fzf | awk '{print $1, $2}')
+  [ -z "$arg_pair" ] && printf "klog: no pods found. no logs can be shown.\n" && return
+  local containers_out=$(echo "$arg_pair" | xargs kubectl get po -o=jsonpath='{.spec.containers[*].name} {.spec.initContainers[*].name}' -n | sed 's/ $//')
+  local container_choosen=$(echo "$containers_out" |  tr ' ' "\n" | _inline_fzf_nh)
+  kubectl logs -n ${arg_pair} -c "${container_choosen}" --tail="${line_count}" "$@"
+}
+# change context/namespace
+kns() {
+    local ps1_cache='/tmp/.kns' ns context=$(kubectl config current-context)
+    if [ "$1" == "-n" ]; then
+        ns="$(kubectl get ns | _inline_fzf | awk '{print $1}')"
+        [ -z "$ns" ] && printf "kns: no namespace selected/found.\nUsage: kns [-n,off]\n" && return
+        kubectl config set-context "$context" --namespace="${ns}"
+    elif [ "$1" == "off" ]; then
+      [ -f $ps1_cache ] && rm $ps1_cache
+      return
+    else
+      context="$(kubectl config get-contexts | _inline_fzf | cut -b4- | awk '{print $1}')"
+      [ -z "$context" ] && printf "kns: no context selected/found.\nUsage: kns [-n,off]\n" && return
+      kubectl config set current-context "$context"
+      ns="$(kubectl config get-contexts $context --no-headers | awk '{print $NF}')"
+    fi
+    [ "$ns" == "kube-system" ] && ns="k-s"
+    echo -n "$context:$ns"$'\u2388 ' > $ps1_cache
 }
