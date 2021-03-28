@@ -66,19 +66,28 @@ klog() {
   kubectl logs -n ${arg_pair} -c "${container_choosen}" --tail="${line_count}" "$@"
 }
 # change context/namespace
+_kns() {
+    local res
+    if [ $COMP_CWORD -eq 1 ]; then
+        res='off -n '`kubectl config get-contexts -o name`
+    elif [ $COMP_CWORD -eq 2 ]; then
+        res=`kubectl get ns -o custom-columns=:metadata.name --no-headers`
+    fi
+    [ "$res" ] && COMPREPLY=(`compgen -W "$res" -- ${COMP_WORDS[COMP_CWORD]}`)
+}
+complete -F _kns kns
 kns() {
-    local ps1_cache='/tmp/.kns' ns context=$(kubectl config current-context)
-    if [ "$1" == "-n" ]; then
-        ns="$(kubectl get ns | _inline_fzf | awk '{print $1}')"
-        [ -z "$ns" ] && printf "kns: no namespace selected/found.\nUsage: kns [-n,off]\n" && return
-        kubectl config set-context "$context" --namespace="${ns}"
-    elif [ "$1" == "off" ]; then
+    local ps1_cache='/tmp/.kns' context ns
+    if [ "$1" == "off" ]; then
       [ -f $ps1_cache ] && rm $ps1_cache
       return
+    elif [ "$1" == "-n" ]; then
+      ns="$2"
+      kubectl config set-context --current --namespace="${ns}"
+      context=$(kubectl config current-context)
     else
-      context="$(kubectl config get-contexts | _inline_fzf | cut -b4- | awk '{print $1}')"
-      [ -z "$context" ] && printf "kns: no context selected/found.\nUsage: kns [-n,off]\n" && return
-      kubectl config set current-context "$context"
+      context="$1"
+      kubectl config set current-context "${context}"
       ns="$(kubectl config get-contexts $context --no-headers | awk '{print $NF}')"
     fi
     [ "$ns" == "kube-system" ] && ns="k-s"

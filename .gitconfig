@@ -3,3 +3,5 @@
   name = sepa
 [colour]
   ui = true
+[core]
+  excludesfile = ~/.gitignore
