@@ -67,29 +67,29 @@ klog() {
 }
 # change context/namespace
 _kns() {
-    local res
-    if [ $COMP_CWORD -eq 1 ]; then
-        res='off -n '`kubectl config get-contexts -o name`
-    elif [ $COMP_CWORD -eq 2 ]; then
-        res=`kubectl get ns -o custom-columns=:metadata.name --no-headers`
-    fi
-    [ "$res" ] && COMPREPLY=(`compgen -W "$res" -- ${COMP_WORDS[COMP_CWORD]}`)
+  local res
+  if [ $COMP_CWORD -eq 1 ]; then
+    res='off -n '`kubectl config get-contexts -o name`
+  elif [ $COMP_CWORD -eq 2 ]; then
+    res=`kubectl get ns -o custom-columns=:metadata.name --no-headers`
+  fi
+  [ "$res" ] && COMPREPLY=(`compgen -W "$res" -- ${COMP_WORDS[COMP_CWORD]}`)
 }
 complete -F _kns kns
 kns() {
-    local ps1_cache='/tmp/.kns' context ns
-    if [ "$1" == "off" ]; then
-      [ -f $ps1_cache ] && rm $ps1_cache
-      return
-    elif [ "$1" == "-n" ]; then
-      ns="$2"
-      kubectl config set-context --current --namespace="${ns}"
-      context=$(kubectl config current-context)
-    else
-      context="$1"
-      kubectl config set current-context "${context}"
-      ns="$(kubectl config get-contexts $context --no-headers | awk '{print $NF}')"
-    fi
-    [ "$ns" == "kube-system" ] && ns="k-s"
-    echo -n "$context:$ns"$'\u2388 ' > $ps1_cache
+  local ps1_cache='/tmp/.kns' context ns
+  if [ "$1" == "off" ]; then
+    [ -f $ps1_cache ] && rm $ps1_cache
+    return
+  elif [ "$1" == "-n" ]; then
+    ns="$2"
+    kubectl config set-context --current --namespace="${ns}"
+    context=$(kubectl config current-context)
+  else
+    context="$1"
+    kubectl config set current-context "${context}"
+    ns="$(kubectl config get-contexts $context --no-headers | awk '{print $NF}')"
+  fi
+  [ "$ns" == "kube-system" ] && ns="k-s"
+  echo -n "$context:$ns"$'\u2388 ' > $ps1_cache
 }
